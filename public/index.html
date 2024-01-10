@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Net Worth Calculator</title>
+    <meta name="description" content="A simple web app to calculate your net worth."></meta>
+    <link rel="stylesheet" href="styles/main.css"></link>
+    <link rel="icon" href="assets/favicon.ico"></link>
+</head>
+<body>
+
+<h1>Net Worth Calculator</h1>
+
+<p>
+    Use this calculator to determine your net worth. Enter the value of your assets and liabilities below.
+    Please note that this calculator is for informational purposes only and does not constitute financial advice.
+    No information you input in this site is saved or transmitted anywhere.
+</p>
+
+<div id="assetsContainer"></div>
+
+<button onclick="addAsset()">Add asset</button>
+
+<div id="liabilitiesContainer"></div>
+
+<button onclick="addLiability()">Add liability</button>
+
+<p class="special" id="netWorth"> Net worth: </p>
+
+<script>
+
+const assets = [
+    // Liquid Assets
+    "Checking and savings accounts",
+    "Emergency fund",
+    "Petty cash",
+    "Cash value of life insurance policies",
+
+    // Investment Accounts
+    "401(k)s and other employer-sponsored retirement plans",
+    "Traditional individual retirement accounts (IRAs)",
+    "Roth IRAs",
+    "Brokerage accounts",
+    "Certificates of deposit (CDs)",
+    "Money market accounts",
+    "Mutual funds",
+    "Exchange-traded funds (ETFs)",
+    "Bonds",
+    "Real estate investment trusts (REITs)",
+    "Health savings accounts (HSAs)",
+
+    // Physical Assets
+    "Primary residence (current market value)",
+    "Secondary residences (vacation homes, rental properties)",
+    "Vehicles (cars, motorcycles, boats)",
+    "Recreational vehicles (RVs, campers)",
+    "Jewelry and precious metals",
+    "Artwork and collectibles",
+    "Antiques and furniture",
+    "Electronics and appliances",
+    "Tools and equipment",
+    "Business inventory (if applicable)",
+
+    // Other Valuable Assets
+    "Cryptocurrency",
+    "Intellectual property (patents, copyrights, trademarks)",
+    "Frequent flyer miles and travel rewards",
+    "Prepaid expenses (insurance, gym memberships)",
+];
+
+const liabilities = [
+    // Secured Debts
+    "Mortgages",
+    "Auto loans",
+    "Recreational vehicle loans",
+    "Student loans",
+    "Business loans",
+    "Home equity loans and lines of credit",
+
+    // Unsecured Debts
+    "Credit card balances",
+    "Personal loans",
+    "Lines of credit",
+    "Medical bills",
+    "Utility bills",
+    "Past due taxes",
+    "Alimony or child support payments",
+    "Other outstanding bills",
+];
+
+function addLine(array, containerID) {
+    // Create new line
+    let newLine = document.createElement("div");
+
+    // Create dropdown
+    let dropdown = document.createElement("select");
+    // Create placeholder option
+    const placeholderOption = document.createElement("option");
+    placeholderOption.text = "-- Select an option --";
+    placeholderOption.value = "";
+    dropdown.appendChild(placeholderOption);
+    // Populate dropdown
+    for (let i = 0; i < array.length; i++) {
+        let option = document.createElement("option");
+        option.value = array[i];
+        option.text = array[i];
+        dropdown.appendChild(option);
+    }
+    newLine.appendChild(dropdown);
+
+    // Create input box
+    let inputBox = document.createElement("input");
+    // Event listener to call function each time input value changes
+    inputBox.oninput = calculateNetWorth;
+    newLine.appendChild(inputBox);
+
+    // Create remove button
+    let removeButton = document.createElement("button");
+    removeButton.innerHTML = "Remove";
+    removeButton.onclick = function() {
+        this.parentElement.remove();
+        calculateNetWorth(); // Recalculate net worth when a line is removed
+    };
+    newLine.appendChild(removeButton);
+
+    // Append new line to container
+    document.getElementById(containerID).appendChild(newLine);
+}
+
+function addAsset() {
+    addLine(assets, "assetsContainer");
+}
+
+function addLiability() {
+    addLine(liabilities, "liabilitiesContainer");
+}
+
+function calculateNetWorth() {
+    let assetInputs = document.querySelectorAll('#assetsContainer input');
+    let liabilityInputs = document.querySelectorAll('#liabilitiesContainer input');
+
+    let totalAssets = 0;
+    assetInputs.forEach(input => {
+        let value = Number(input.value);
+        if (!isNaN(value)) {
+            totalAssets += value;
+        }
+    });
+
+    let totalLiabilities = 0;
+    liabilityInputs.forEach(input => {
+        let value = Number(input.value);
+        if (!isNaN(value)) {
+            totalLiabilities += value;
+        }
+    });
+
+    let netWorth = totalAssets - totalLiabilities;
+
+    document.getElementById('netWorth').textContent = "Net worth: " + netWorth;
+}
+</script>
+
+</body>
+</html>
